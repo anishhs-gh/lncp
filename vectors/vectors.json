@@ -1,0 +1,50 @@
+{
+  "note": "LNCP/1 conformance vectors. Regenerate with: node generate.js",
+  "identity": {
+    "seedHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "pkcs8Hex": "302e020100300506032b657004220420000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "publicKeyB64": "MCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg="
+  },
+  "discoveryBeacon": {
+    "inputs": {
+      "id": "9f8b7c6d-1e2f-4a3b-8c9d-0e1f2a3b4c5d",
+      "nickname": "alice",
+      "discriminator": "a1b2",
+      "port": 9000,
+      "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "space": "",
+      "timestamp": 1751000000000
+    },
+    "canonicalSignInput": "{\"discriminator\":\"a1b2\",\"fingerprint\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"9f8b7c6d-1e2f-4a3b-8c9d-0e1f2a3b4c5d\",\"nickname\":\"alice\",\"port\":9000,\"publicKey\":\"MCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=\",\"space\":\"\",\"timestamp\":1751000000000}",
+    "signatureB64": "AdYsJzYIA5N1UI+/SRgb68VS8D+gx71AteZmdtLCblZxPC9j8EWobqmxlYP1AJwOnSL+jBquGr/oMP+CK/bZCA==",
+    "wirePacketJson": {
+      "type": "HELLO",
+      "id": "9f8b7c6d-1e2f-4a3b-8c9d-0e1f2a3b4c5d",
+      "nickname": "alice",
+      "discriminator": "a1b2",
+      "port": 9000,
+      "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "space": "",
+      "timestamp": 1751000000000,
+      "publicKey": "MCowBQYDK2VwAyEAA6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=",
+      "signature": "AdYsJzYIA5N1UI+/SRgb68VS8D+gx71AteZmdtLCblZxPC9j8EWobqmxlYP1AJwOnSL+jBquGr/oMP+CK/bZCA=="
+    },
+    "wirePacketBytesHex": "7b2274797065223a2248454c4c4f222c226964223a2239663862376336642d316532662d346133622d386339642d306531663261336234633564222c226e69636b6e616d65223a22616c696365222c226469736372696d696e61746f72223a2261316232222c22706f7274223a393030302c2266696e6765727072696e74223a2261616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161222c227370616365223a22222c2274696d657374616d70223a313735313030303030303030302c227075626c69634b6579223a224d436f77425159444b3256774179454141364548762f504f454c3464634e3059353076416d57666b316a436270513166486479475a424a564d62673d222c227369676e6174757265223a22416459734a7a594941354e3155492b2f535267623638565338442b677837314174655a6d64744c43626c5a785043396a3845576f62716d786c595031414a774f6e534c2b6a42717547722f6f4d502b434b2f625a43413d3d227d"
+  },
+  "streamMessageFrame": {
+    "envelope": {
+      "v": "1.0",
+      "type": "MESSAGE",
+      "id": "11111111-2222-4333-8444-555555555555",
+      "from": {
+        "id": "9f8b7c6d-1e2f-4a3b-8c9d-0e1f2a3b4c5d",
+        "nickname": "alice",
+        "discriminator": "a1b2"
+      },
+      "message": "hello world"
+    },
+    "contentType": 1,
+    "bodyLength": 191,
+    "frameBytesHex": "000000bf017b2276223a22312e30222c2274797065223a224d455353414745222c226964223a2231313131313131312d323232322d343333332d383434342d353535353535353535353535222c2266726f6d223a7b226964223a2239663862376336642d316532662d346133622d386339642d306531663261336234633564222c226e69636b6e616d65223a22616c696365222c226469736372696d696e61746f72223a2261316232227d2c226d657373616765223a2268656c6c6f20776f726c64227d"
+  }
+}
