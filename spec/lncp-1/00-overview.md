@@ -53,6 +53,9 @@ beneath it. A layer never inspects the internals of the layer above it.
 │ MODULES        messaging · presence · typing · files ·    │  07-module-*.md
 │                voice · <third-party>                      │
 ├──────────────────────────────────────────────────────────┤
+│ CORE PACKETS   SESSION_HELLO · GOODBYE · CAPABILITIES ·   │  08-core-packets.md
+│                ERROR · PING/PONG                          │
+├──────────────────────────────────────────────────────────┤
 │ SESSION        one-shot | persistent · lifecycle · close  │  06-sessions.md
 ├──────────────────────────────────────────────────────────┤
 │ ENVELOPE       version · type · flags · id · realm        │  02-envelope.md

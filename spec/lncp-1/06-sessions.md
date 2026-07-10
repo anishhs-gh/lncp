@@ -50,9 +50,10 @@ connect → TLS handshake → pin fingerprint → HELLO/version exchange
         → (many frames, both directions) → GOODBYE → close
 ```
 
-- The first envelope each side sends **MUST** carry the `v` field
-  (`02-envelope.md §2.1`); this is the version exchange. Each side selects the
-  highest major.minor it shares with the peer.
+- The opener is the `SESSION_HELLO` packet (`08-core-packets.md §1`); it carries
+  the `v` field (`02-envelope.md §2.1`) and the sender's identity. This is the
+  version exchange. Each side selects the highest major.minor it shares with the
+  peer. Clean close uses `GOODBYE` (`08-core-packets.md §2`).
 - Either side **MAY** keep the connection open indefinitely and **SHOULD** apply
   transport keepalive.
 - To close cleanly, a peer **SHOULD** send a `GOODBYE` packet, then close the
@@ -94,6 +95,7 @@ resynchronized.
 
 ## 5. Errors
 
-Session-level failures are reported with the `ERROR` packet and the numeric codes
-in `registry.md`. An `ERROR` **SHOULD** set `re` to the `id` of the packet that
-caused it, when that packet carried an `id`.
+Session-level failures are reported with the `ERROR` packet
+(`08-core-packets.md §4`) and the numeric codes in `registry.md §5`. An `ERROR`
+**SHOULD** set `re` to the `id` of the packet that caused it, when that packet
+carried an `id`.

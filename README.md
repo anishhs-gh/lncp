@@ -38,8 +38,9 @@ lncp/
 5. [`spec/lncp-1/04-security.md`](spec/lncp-1/04-security.md) — signing, encryption, trust
 6. [`spec/lncp-1/05-discovery.md`](spec/lncp-1/05-discovery.md) — finding peers
 7. [`spec/lncp-1/06-sessions.md`](spec/lncp-1/06-sessions.md) — connection lifecycle
-8. [`spec/lncp-1/07-module-messaging.md`](spec/lncp-1/07-module-messaging.md) — the first module
-9. [`spec/lncp-1/registry.md`](spec/lncp-1/registry.md) — reserved codes, ports, capabilities, errors
+8. [`spec/lncp-1/07-module-messaging.md`](spec/lncp-1/07-module-messaging.md) — the first (mandatory) module
+9. [`spec/lncp-1/08-core-packets.md`](spec/lncp-1/08-core-packets.md) — SESSION_HELLO, GOODBYE, CAPABILITIES, ERROR
+10. [`spec/lncp-1/registry.md`](spec/lncp-1/registry.md) — reserved codes, ports, content types, capabilities, errors
 
 ## Conformance
 

@@ -31,12 +31,13 @@ these ranges safe to extend.
 
 | Code | Name | Defined in |
 |------|------|-----------|
-| `0x0001` | `HELLO` | `05-discovery.md` (beacon); also the persistent-session opener |
-| `0x0002` | `GOODBYE` | `06-sessions.md` |
-| `0x0020` | `PING` | `06-sessions.md` |
-| `0x0021` | `PONG` | `06-sessions.md` |
-| `0x0050` | `ERROR` | this document §4 |
-| `0x0060` | `CAPABILITIES` | this document §3 |
+| `0x0001` | `HELLO` | `05-discovery.md` — signed discovery beacon (datagram transport only) |
+| `0x0002` | `GOODBYE` | `08-core-packets.md §2` |
+| `0x0003` | `SESSION_HELLO` | `08-core-packets.md §1` — persistent-session opener (stream transport) |
+| `0x0020` | `PING` | `06-sessions.md §3` |
+| `0x0021` | `PONG` | `06-sessions.md §3` |
+| `0x0050` | `ERROR` | `08-core-packets.md §4` (codes: §4 below) |
+| `0x0060` | `CAPABILITIES` | `08-core-packets.md §3` (names: §3 below) |
 
 **Messaging module (`0x0100`–`0x010F`):**
 
@@ -80,7 +81,23 @@ These ranges are part of the LNCP/1 profile so that independent implementations
 find each other by default. A peer **MUST** advertise its actual session port in
 its beacon rather than assuming a fixed value.
 
-## 3. Capabilities
+## 3. Content types
+
+The 1-byte `c-type` field in a stream frame (`01-framing.md §3`) names the
+encoding of the frame body.
+
+| Value | Name | Status | Meaning |
+|-------|------|--------|---------|
+| `0` | reserved | reserved | Never sent; reserved to catch zeroed headers. |
+| `1` | `json` | **mandatory** | UTF-8 JSON. The only encoding defined in LNCP/1; every peer MUST support it. |
+| `2` | `cbor` | reserved | Compact binary (CBOR). Reserved for a future minor version. |
+| `3`–`239` | — | reserved | For future standard encodings. |
+| `240`–`255` | — | vendor | Private/experimental encodings; never sent between independent products. |
+
+A peer that receives a frame with an unsupported `c-type` **MUST** skip the
+frame's body without failing the stream (`01-framing.md §3.1`).
+
+## 4. Capabilities
 
 Capabilities are lowercase strings a peer advertises so peers can negotiate
 optional behavior. A peer **MUST** ignore capability names it does not recognize.
@@ -97,36 +114,14 @@ optional behavior. A peer **MUST** ignore capability names it does not recognize
 | `video` | reserved | Real-time video. |
 | `extensions` | reserved | Willing to receive vendor/experimental packets. |
 
-### 3.1 CAPABILITIES packet
+The `CAPABILITIES` packet that carries these names is defined in
+`08-core-packets.md §3`.
 
-```json
-{ "v": "1.0", "type": "CAPABILITIES", "capabilities": ["messaging"] }
-```
+## 5. Error codes
 
-| Field | Type | Presence | Meaning |
-|-------|------|----------|---------|
-| `capabilities` | array of string | REQUIRED | Capabilities the sender supports. |
-
-Exchanged on a persistent session after the version exchange, when either side
-wants to negotiate optional modules. The effective capability set for a session
-is the **intersection** of both peers' advertised sets. Absence of a
-`CAPABILITIES` exchange means only mandatory capabilities (`messaging`) are
-assumed.
-
-## 4. Error codes
-
-Errors are reported with the `ERROR` packet using numeric `code` values.
-Applications render human-friendly text; the protocol carries the number.
-
-```json
-{ "v": "1.0", "type": "ERROR", "re": "<id of offending packet, if any>", "code": 1003, "detail": "unsupported version" }
-```
-
-| Field | Type | Presence | Meaning |
-|-------|------|----------|---------|
-| `code` | number | REQUIRED | Error code from the table below. |
-| `re` | string | OPTIONAL | `id` of the packet that caused the error, if it had one. |
-| `detail` | string | OPTIONAL | Human-readable, non-normative context. |
+Errors are reported with the `ERROR` packet (`08-core-packets.md §4`) using the
+numeric `code` values below. Applications render human-friendly text; the
+protocol carries the number.
 
 | Code | Name | Meaning |
 |------|------|---------|
@@ -144,7 +139,7 @@ Applications render human-friendly text; the protocol carries the number.
 Codes `1000`–`1999` are reserved for core/standard errors. `2000`–`2999` are
 reserved for vendor-defined errors.
 
-## 5. Changing the registry
+## 6. Changing the registry
 
 - Adding a new packet type, capability, or error code is a **minor** version
   change: it never alters the meaning of an existing value.
