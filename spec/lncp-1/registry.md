@@ -47,28 +47,45 @@ these ranges safe to extend.
 | `0x0101` | `MESSAGE_ACK` | `07-module-messaging.md` |
 | `0x0102`–`0x010F` | *reserved* | messaging futures (edit, delete, receipts, reactions, threads) |
 
-**Reserved for standard modules not yet specified in LNCP/1** (names fixed so
-existing deployments' packets keep their identity; full definitions land in
-future minor versions):
+**Typing module (`0x0110`–`0x011F`):**
 
-| Code | Name | Future module |
-|------|------|---------------|
-| `0x0110` | `TYPING` | typing |
-| `0x0111` | `STOP_TYPING` | typing |
-| `0x0120` | `PRESENCE` | presence |
-| `0x0200` | `FILE_OFFER` | file-transfer |
-| `0x0201` | `FILE_ACCEPT` | file-transfer |
-| `0x0202` | `FILE_REJECT` | file-transfer |
-| `0x0203` | `FILE_READY` | file-transfer |
-| `0x0204` | `FILE_CANCEL` | file-transfer |
-| `0x0205` | `FILE_PAUSE` | file-transfer |
-| `0x0206` | `FILE_RESUME` | file-transfer |
-| `0x0207` | `FILE_RESUME_REQUEST` | file-transfer |
-| `0x0300`–`0x03FF` | `CALL_*` | voice/media |
+| Code | Name | Defined in |
+|------|------|-----------|
+| `0x0110` | `TYPING` | `09-module-typing.md` |
+| `0x0111` | `STOP_TYPING` | `09-module-typing.md` |
+| `0x0112`–`0x011F` | *reserved* | typing futures |
 
-> These reserved entries mirror packet types already used in practice. Listing
-> them here prevents any future code from colliding with them, even though their
-> normative definitions are deferred.
+**Presence module (`0x0120`–`0x012F`):**
+
+| Code | Name | Defined in |
+|------|------|-----------|
+| `0x0120` | `PRESENCE` | `10-module-presence.md` |
+| `0x0121`–`0x012F` | *reserved* | presence futures |
+
+**File-transfer module (`0x0200`–`0x02FF`):**
+
+| Code | Name | Defined in |
+|------|------|-----------|
+| `0x0200` | `FILE_OFFER` | `11-module-file-transfer.md` |
+| `0x0201` | `FILE_ACCEPT` | `11-module-file-transfer.md` |
+| `0x0202` | `FILE_REJECT` | `11-module-file-transfer.md` |
+| `0x0203` | `FILE_READY` | `11-module-file-transfer.md` |
+| `0x0204` | `FILE_CANCEL` | `11-module-file-transfer.md` |
+| `0x0205` | `FILE_PAUSE` | `11-module-file-transfer.md` |
+| `0x0206` | `FILE_RESUME` | `11-module-file-transfer.md` |
+| `0x0207` | `FILE_RESUME_REQUEST` | `11-module-file-transfer.md` |
+| `0x0208`–`0x02FF` | *reserved* | file-transfer futures |
+
+**Voice/media module (`0x0300`–`0x03FF`):**
+
+| Code | Name | Defined in |
+|------|------|-----------|
+| `0x0300` | `CALL_OFFER` | `12-module-voice.md` |
+| `0x0301` | `CALL_ACCEPT` | `12-module-voice.md` |
+| `0x0302` | `CALL_REJECT` | `12-module-voice.md` |
+| `0x0303` | `CALL_BUSY` | `12-module-voice.md` |
+| `0x0304` | `CALL_END` | `12-module-voice.md` |
+| `0x0305`–`0x03FF` | *reserved* | voice/media futures |
 
 ## 2. Ports
 

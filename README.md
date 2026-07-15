@@ -1,5 +1,7 @@
 # LNCP — Local Network Communication Protocol
 
+[![CI](https://github.com/anishhs-gh/lncp/actions/workflows/ci.yml/badge.svg)](https://github.com/anishhs-gh/lncp/actions/workflows/ci.yml)
+
 **An open specification for secure, zero-configuration communication between
 devices on the same local network.**
 
@@ -16,7 +18,7 @@ stack.
 
 ## Status
 
-- **Specification version:** LNCP/1 (frozen core in progress — see `spec/lncp-1/`)
+- **Specification version:** LNCP/1.0 (core frozen; optional modules specified — see `spec/lncp-1/`)
 - **This repository is the authority.** Where an implementation and the spec
   disagree, the spec is correct.
 
@@ -31,6 +33,8 @@ lncp/
 
 ## Reading order
 
+### Core specification
+
 1. [`spec/lncp-1/00-overview.md`](spec/lncp-1/00-overview.md) — model, layers, terminology
 2. [`spec/lncp-1/01-framing.md`](spec/lncp-1/01-framing.md) — how bytes are delimited on a transport
 3. [`spec/lncp-1/02-envelope.md`](spec/lncp-1/02-envelope.md) — the universal packet structure
@@ -41,6 +45,13 @@ lncp/
 8. [`spec/lncp-1/07-module-messaging.md`](spec/lncp-1/07-module-messaging.md) — the first (mandatory) module
 9. [`spec/lncp-1/08-core-packets.md`](spec/lncp-1/08-core-packets.md) — SESSION_HELLO, GOODBYE, CAPABILITIES, ERROR
 10. [`spec/lncp-1/registry.md`](spec/lncp-1/registry.md) — reserved codes, ports, content types, capabilities, errors
+
+### Optional modules
+
+11. [`spec/lncp-1/09-module-typing.md`](spec/lncp-1/09-module-typing.md) — ephemeral typing indicators
+12. [`spec/lncp-1/10-module-presence.md`](spec/lncp-1/10-module-presence.md) — online status indicators
+13. [`spec/lncp-1/11-module-file-transfer.md`](spec/lncp-1/11-module-file-transfer.md) — peer-to-peer file exchange
+14. [`spec/lncp-1/12-module-voice.md`](spec/lncp-1/12-module-voice.md) — real-time audio calls
 
 ## Conformance
 
@@ -56,12 +67,12 @@ An implementation is **LNCP/1 conformant** when it:
 
 The intent is maximum freedom to implement:
 
-- **Specification text** (`spec/`, `vectors/`): released so that anyone may
-  implement LNCP freely, in any language, for any purpose. Target: CC0 or CC-BY.
-- **Reference library** (`reference/`): permissive open source. Target: Apache-2.0.
+- **Specification text** (`spec/`) and **vectors** (`vectors/`): CC0 —
+  anyone may implement LNCP freely, in any language, for any purpose.
+- **Reference library** (`reference/`): Apache-2.0.
 
 A program that *uses* LNCP is free to choose its own license. Implementing the
-protocol never imposes one.
+protocol never imposes one. See [`LICENSE`](LICENSE) for the layout.
 
 ## Governance
 
@@ -69,3 +80,8 @@ LNCP is small and evolves deliberately. Every change to the frozen core is a
 written, versioned proposal that, once accepted, is not silently altered. The
 frozen core stays stable; new capability is added as **modules** and **minor
 versions**, never by changing the meaning of existing packets.
+
+How to propose changes, the minor/major rules, and the release process are in
+[`CONTRIBUTING.md`](CONTRIBUTING.md). Releases are recorded in
+[`CHANGELOG.md`](CHANGELOG.md). Vulnerabilities: see
+[`SECURITY.md`](SECURITY.md).

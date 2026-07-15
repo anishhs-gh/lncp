@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:            # every branch
+  pull_request:
+
+# Cancel superseded runs of the same branch/PR
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reference:
+    name: "@lncp/core (Node ${{ matrix.node }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    defaults:
+      run:
+        working-directory: reference
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: reference/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: reference
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: reference/package-lock.json
+      - run: npm ci
+      # The library has zero runtime dependencies — this guards the dev chain.
+      - run: npm audit --audit-level=high
+
+  vectors:
+    name: Conformance vectors reproduce
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+      # vectors.json is frozen output — the generator must reproduce it
+      # byte-for-byte on any machine (spec conformance requirement).
+      - run: node vectors/generate.js | diff vectors/vectors.json -
+
+  # Publishability is a CI concern, not a release-day surprise: every push
+  # proves the tarball is clean and (when the token is available) that npm
+  # auth + permissions would allow a publish. Soft on auth so fork PRs pass.
+  npm-dry-run:
+    name: npm publishability
+    uses: ./.github/workflows/npm-dry-run.yml
+    with:
+      require-auth: false
+    secrets: inherit

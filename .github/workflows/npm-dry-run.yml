@@ -1,0 +1,113 @@
+name: npm dry-run
+
+# Reusable publishability check for @lncp/core (reference/). Proves a real
+# `npm publish` would succeed WITHOUT publishing anything:
+#
+#   quality gates (typecheck + tests) → build → tarball allowlist
+#   (scripts/verify-pack.mjs) → npm auth/permission check → publish --dry-run
+#
+# Called three ways:
+#   - by ci.yml on every push/PR with require-auth: false — the auth check runs
+#     only when NPM_TOKEN is available, so PRs from forks (which never receive
+#     secrets) still get the full build/pack validation instead of a hard fail.
+#   - by release.yml with require-auth: true — the final guard before a real
+#     publish; a missing/expired token fails loudly here, where it matters.
+#   - manually from the Actions tab, to answer "would a publish work right now?"
+
+on:
+  workflow_call:
+    inputs:
+      require-auth:
+        description: "Fail if NPM_TOKEN is missing or cannot publish (release path)"
+        type: boolean
+        default: false
+    secrets:
+      NPM_TOKEN:
+        required: false
+  workflow_dispatch:
+    inputs:
+      require-auth:
+        description: "Fail if NPM_TOKEN is missing or cannot publish"
+        type: boolean
+        default: true
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: reference
+    # Job-level so every npm command can resolve the ${NODE_AUTH_TOKEN}
+    # reference that setup-node writes into .npmrc. When the secret is absent
+    # (fork PRs) this is an EMPTY string — defined, so npm's env substitution
+    # succeeds and npm runs anonymously instead of erroring on `npm ci`.
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+          cache-dependency-path: reference/package-lock.json
+
+      - run: npm ci
+
+      - name: Quality gates (typecheck + tests)
+        run: npm run check
+
+      - run: npm run build
+
+      - name: Verify tarball ships only allowlisted files
+        run: npm run verify-pack
+
+      - name: Verify npm auth & publish permission
+        env:
+          REQUIRE_AUTH: ${{ inputs.require-auth }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            if [ "$REQUIRE_AUTH" = "true" ]; then
+              echo "::error::NPM_TOKEN secret is not set — a real publish would fail."
+              exit 1
+            fi
+            echo "::notice::NPM_TOKEN not available (fork PR or unset) — skipping auth check; pack validation already passed."
+            exit 0
+          fi
+
+          if ! whoami_out="$(npm whoami 2>npm_err)"; then
+            cat npm_err >&2
+            echo "::error::npm authentication failed — NPM_TOKEN is invalid or expired."
+            exit 1
+          fi
+          echo "Authenticated to npm as: $whoami_out"
+
+          pkg="$(node -p "require('./package.json').name")"
+          # On the FIRST publish the package does not exist yet — npm access
+          # 404s, which is expected: a new scoped package is publishable by
+          # its scope owner.
+          if ! npm access list collaborators "$pkg" --json > collabs.json 2>npm_err; then
+            if grep -qiE '404|not found|E404' npm_err; then
+              echo "$pkg not on the registry yet — treating as first publish (OK)."
+              exit 0
+            fi
+            cat npm_err >&2
+            echo "::error::Could not confirm publish permission for $pkg."
+            exit 1
+          fi
+          perm="$(node -e 'const c=require("./collabs.json");process.stdout.write(c[process.argv[1]]||"none")' "$whoami_out")"
+          case "$perm" in
+            *write*) echo "Publish permission confirmed ($perm)." ;;
+            *) echo "::error::$whoami_out lacks write access to $pkg (has: $perm)."; exit 1 ;;
+          esac
+
+      - name: Dry-run publish (authenticated)
+        if: env.NODE_AUTH_TOKEN != ''
+        run: npm publish --dry-run
+
+      - name: Dry-run pack (no token available)
+        if: env.NODE_AUTH_TOKEN == ''
+        run: npm pack --dry-run

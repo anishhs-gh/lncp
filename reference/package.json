@@ -2,7 +2,16 @@
   "name": "@lncp/core",
   "version": "1.0.0",
   "description": "LNCP/1 reference implementation — Local Network Communication Protocol",
+  "keywords": ["lncp", "lan", "protocol", "zero-config", "p2p", "local-network", "ed25519"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anishhs-gh/lncp.git",
+    "directory": "reference"
+  },
+  "homepage": "https://github.com/anishhs-gh/lncp#readme",
+  "bugs": "https://github.com/anishhs-gh/lncp/issues",
   "type": "module",
+  "sideEffects": false,
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -12,13 +21,19 @@
     }
   },
   "files": [
-    "dist/",
-    "src/"
+    "dist"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test test/*.test.ts"
+    "test": "node --import tsx --test test/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "verify-pack": "node scripts/verify-pack.mjs",
+    "prepublishOnly": "npm run check && npm run build && npm run verify-pack"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   },
   "license": "Apache-2.0",
   "engines": {

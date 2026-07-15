@@ -1,0 +1,20 @@
+LNCP — Licensing
+
+This repository intentionally uses different licenses for different parts,
+chosen so that anyone may implement the protocol freely, in any language, for
+any purpose:
+
+  spec/       CC0 1.0 Universal        see spec/LICENSE
+  vectors/    CC0 1.0 Universal        see vectors/LICENSE
+  reference/  Apache License 2.0       see reference/LICENSE
+
+In short:
+
+- The SPECIFICATION and the CONFORMANCE VECTORS are dedicated to the public
+  domain (CC0). Implementing LNCP never requires permission and never imposes
+  a license on your program.
+
+- The REFERENCE LIBRARY (@lncp/core) is permissively licensed under
+  Apache-2.0. You may use it directly in commercial or open-source software.
+
+A program that uses or implements LNCP is free to choose its own license.

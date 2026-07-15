@@ -12,6 +12,8 @@ logic testable and transport-agnostic.
 
 ## Modules
 
+### Core (mandatory)
+
 | Module | Spec | Responsibility |
 |--------|------|----------------|
 | `registry` | `registry.md` | Type codes, ports, content types, capabilities, error codes. |
@@ -23,6 +25,15 @@ logic testable and transport-agnostic.
 | `messaging` | `07-module-messaging.md` | `MESSAGE` / `MESSAGE_ACK`. |
 | `core-packets` | `08-core-packets.md` | `SESSION_HELLO`, `GOODBYE`, `CAPABILITIES`, `ERROR`, `PING`/`PONG`, version negotiation. |
 
+### Optional modules
+
+| Module | Spec | Responsibility |
+|--------|------|----------------|
+| `typing` | `09-module-typing.md` | `TYPING` / `STOP_TYPING` — ephemeral typing indicators. |
+| `presence` | `10-module-presence.md` | `PRESENCE` — online status indicators. |
+| `file-transfer` | `11-module-file-transfer.md` | `FILE_OFFER`/`ACCEPT`/`REJECT`/`READY`/`CANCEL`/`PAUSE`/`RESUME` — peer-to-peer file exchange. |
+| `voice` | `12-module-voice.md` | `CALL_OFFER`/`ACCEPT`/`REJECT`/`BUSY`/`END` — real-time audio calls. |
+
 ## Use
 
 ```bash
@@ -31,6 +42,8 @@ npm run build       # emit dist/ (JS + .d.ts)
 npm run typecheck   # strict type check, no emit
 npm test            # conformance + behavior tests
 ```
+
+### Core usage
 
 ```ts
 import { generateIdentity, buildBeacon, verifyBeacon, parseBeacon, buildMessage, encodeJsonFrame } from '@lncp/core';
@@ -44,6 +57,47 @@ const beacon = buildBeacon(
 // … send JSON.stringify(beacon) as a UDP datagram; the peer runs:
 const packet = parseBeacon(datagram);
 const result = packet && verifyBeacon(packet, { selfId: me.peerId });
+```
+
+### Optional modules usage
+
+```ts
+import {
+  // Typing
+  buildTyping, buildStopTyping, isTyping, isStopTyping,
+  // Presence
+  buildPresence, isPresence, PresenceStatus,
+  // File transfer
+  buildFileOffer, buildFileAccept, buildFileReject, buildFileReady,
+  buildFileCancel, buildFilePause, buildFileResume, buildFileResumeRequest,
+  generateTransferId, isFileOffer, isFileAccept, /* ... */
+  // Voice
+  buildCallOffer, buildCallAccept, buildCallReject, buildCallBusy, buildCallEnd,
+  generateCallId, generateMediaKey, isCallOffer, isCallAccept, /* ... */
+} from '@lncp/core';
+
+// Typing indicator
+const typingPacket = buildTyping();
+const stopTypingPacket = buildStopTyping();
+
+// Presence status
+const presencePacket = buildPresence('busy', 'in a meeting');
+
+// File transfer
+const fileOffer = buildFileOffer('document.pdf', 1024 * 1024, {
+  hash: 'sha256:abc123...',
+  chunkSize: 65536,
+});
+const fileAccept = buildFileAccept(fileOffer.id, 32768);
+
+// Voice call
+const mediaKey = generateMediaKey();
+const callOffer = buildCallOffer(
+  { id: me.peerId, nickname: 'alice', discriminator: 'a1b2' },
+  49152, // media port
+  mediaKey,
+);
+const callAccept = buildCallAccept(callOffer.callId, peer, 49153);
 ```
 
 ## Conformance

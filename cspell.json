@@ -1,0 +1,31 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "LNCP",
+    "lnchat",
+    "anishhs",
+    "TOFU",
+    "datagram",
+    "datagrams",
+    "keypair",
+    "NDJSON",
+    "npmjs",
+    "collabs",
+    "whoami",
+    "SPKI",
+    "PKCS",
+    "DTMF",
+    "unpinned",
+    "publishability",
+    "pipefail",
+    "prerelease"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "package-lock.json",
+    "vectors/vectors.json",
+    "DEV_*.md"
+  ]
+}
