@@ -2,6 +2,7 @@
   "name": "@lncp/core",
   "version": "1.0.0",
   "description": "LNCP/1 reference implementation — Local Network Communication Protocol",
+  "author": "Anish Shekh (https://anishhs.com)",
   "keywords": ["lncp", "lan", "protocol", "zero-config", "p2p", "local-network", "ed25519"],
   "repository": {
     "type": "git",

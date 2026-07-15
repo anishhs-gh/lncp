@@ -28,8 +28,12 @@ stack.
 lncp/
   spec/lncp-1/      the normative specification, one concern per document
   vectors/          language-independent conformance test vectors
-  reference/        the reference library (extracted over time)
+  reference/        @lncp/core — the TypeScript reference implementation
 ```
+
+The reference library implements every layer of the core spec plus all four
+optional modules, verified byte-for-byte against the vectors — see
+[`reference/README.md`](reference/README.md).
 
 ## Reading order
 
@@ -85,3 +89,9 @@ How to propose changes, the minor/major rules, and the release process are in
 [`CONTRIBUTING.md`](CONTRIBUTING.md). Releases are recorded in
 [`CHANGELOG.md`](CHANGELOG.md). Vulnerabilities: see
 [`SECURITY.md`](SECURITY.md).
+
+## Author
+
+**Anish Shekh** — [anishhs.com](https://anishhs.com) · GitHub:
+[@anishhs-gh](https://github.com/anishhs-gh) · LinkedIn:
+[anishsh](https://www.linkedin.com/in/anishsh)

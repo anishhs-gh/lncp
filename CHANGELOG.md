@@ -11,7 +11,7 @@ Two things are versioned here, deliberately in lockstep for the 1.0 release:
   [semver](https://semver.org). The library's major.minor tracks the highest
   spec version it fully implements.
 
-## [1.0.0] - 2026-07-15
+## [1.0.0] - Unreleased
 
 First public release. Everything below is new.
 

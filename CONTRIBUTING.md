@@ -72,7 +72,8 @@ Releases are cut by the **Release** GitHub Actions workflow
 (`.github/workflows/release.yml`), triggered manually from the master branch:
 
 1. Land a release commit on master containing the `CHANGELOG.md` entry
-   (`## [X.Y.Z]`) and the matching `reference/package.json` version bump.
+   (`## [X.Y.Z]` — replace its `Unreleased` marker with the release date) and
+   the matching `reference/package.json` version bump.
 2. Run the **Release** workflow (Actions → Release → Run workflow) with the
    version number, whether to publish `@lncp/core` to npm (`publish-npm`),
    and the npm dist-tag (`latest` for stable, `beta`/`next` for prereleases —
